@@ -1,0 +1,34 @@
+{
+
+    "manifest_version": 2,
+    "name": "LinkedIn outreach",
+    "version": "1.0",
+    "description": "Scrapes a LinkedIn profile and generates a short message to send to the person.",
+    "permissions":[
+        "find",
+        "tabs",
+        "activeTab",
+        "notifications",
+        "clipboardWrite"
+      ],
+    "background": {
+        "scripts": ["background.js"],
+        "persistent": false
+    },
+    // "content_scripts": [
+    //   {
+    //     "matches": ["<all_urls>"],
+    //     "js": ["app.js"]
+    //   }
+    // ],
+    "browser_action": {
+        "browser_style": true,
+        "default_title": "Extract data",
+        "default_icon": {
+            "32": "find.svg"
+        },
+        "default_popup": "popup.html"
+    }
+  
+  }
+  

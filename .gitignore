@@ -1,0 +1,4 @@
+settings.json
+/web-ext-artifacts
+
+.env
