@@ -1,4 +1,39 @@
 
+let settings;
+fetch('./settings.json')
+.then(response => response.json())
+.then(data => {
+    settings = data;
+});
+
+// Make an API call to OpenAI
+function makeApiCall(html) {
+
+    return fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + settings.OPENAI_API_KEY
+        },
+        body: JSON.stringify({
+        model: settings.model ? settings.model : 'gpt-4',
+        messages: [
+            { role: 'system', content: settings.systemMessage },
+            { role: 'user', content: 'This is the content of the LinkedIn profile that I need to send a message to :' + html },
+            { role: 'user', content: settings.requestMessage}
+        ]
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        return data.choices[0].message.content;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
 
 // Listen for connections from the content script
 browser.runtime.onConnect.addListener(function(port) {
@@ -44,40 +79,3 @@ browser.runtime.onConnect.addListener(function(port) {
   }
 });
 
-// Make an API call to OpenAI
-function makeApiCall(html) {
-
-    fetch('settings.json')
-    .then(response => response.json())
-    .then(data => {
-        const OPENAI_API_KEY = data.OPENAI_API_KEY;
-        const systemMessage = data.systemMessage;
-        const requestMessage = data.requestMessage;
-        const model = data.model;
-
-    return fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + OPENAI_API_KEY
-        },
-        body: JSON.stringify({
-        model: model ? model : 'gpt-4',
-        messages: [
-            { role: 'system', content: systemMessage },
-            { role: 'user', content: 'This is the content of the LinkedIn profile that I need to send a message to :' + html },
-            { role: 'user', content: requestMessage}
-        ]
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        return data.choices[0].message.content;
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-
-    });
-}
