@@ -7,7 +7,12 @@ fetch('./settings.json')
 });
 
 // Make an API call to OpenAI
-function makeApiCall(html) {
+function makeApiCall(html, additionalInfo) {
+
+    if (additionalInfo) {
+        settings.requestMessage += "\n\n" + 
+        "Include the following: " + additionalInfo;
+    }
 
     return fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
@@ -67,7 +72,7 @@ browser.runtime.onConnect.addListener(function(port) {
                 const fulltext = topCard + "\n\n" + highlights + "\n\n" + experience + "\n\n" + education + "\n\n" + about;
                 // port.postMessage({action: "showResponse", response: fulltext});
 
-                makeApiCall(fulltext).then(function(response) {
+                makeApiCall(fulltext, message.additionalInfo).then(function(response) {
                     port.postMessage({action: "showResponse", response: response});
                     console.log(response);
                 });

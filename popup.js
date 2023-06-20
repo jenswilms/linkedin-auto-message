@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const extractButton = document.getElementById('extractButton');
     const statusDiv = document.getElementById('status');
     const loaderDiv = document.getElementById('loader');
+    const additionalInfoInput = document.getElementById('additionalInfo');
+
   
     // Connect to the background script
     const port = browser.runtime.connect({name: "extractHTML"});
@@ -10,16 +12,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add a click event listener to the button
     extractButton.addEventListener('click', function() {
 
+        const additionalInfo = additionalInfoInput.value.trim();
+
         //show loading icon
         loaderDiv.style.display = 'block';
 
-      port.postMessage({action: "extractHTML"});
+      port.postMessage({action: "extractHTML", additionalInfo: additionalInfo});
   
       // Listen for messages from the background script
       port.onMessage.addListener(function(message) {
         if (message.action === "showResponse") {
             //hide loading icon
             loaderDiv.style.display = 'none';
+            additionalInfoInput.value = '';
           // Update the status div with the API response
           statusDiv.textContent = message.response;
         } else {
