@@ -68,9 +68,32 @@ browser.runtime.onConnect.addListener(function(port) {
                 const experience = myDivText.querySelector('#experience').parentElement.textContent;
                 const education = (myDivText.querySelector('#education')) ? myDivText.querySelector('#education').parentElement.textContent : "";
                 const about = (myDivText.querySelector('#about')) ? myDivText.querySelector('#about').parentElement.textContent : "";
+                const languages = (myDivText.querySelector('#langauges')) ? myDivText.querySelector('#languages').parentElement.textContent : "";
+                const volunteering = (myDivText.querySelector('#volunteering_experience')) ? myDivText.querySelector('#volunteering_experience').parentElement.textContent : "";
+                const projects = (myDivText.querySelector('#projects')) ? myDivText.querySelector('#projects').parentElement.textContent : "";
 
-                const fulltext = topCard + "\n\n" + highlights + "\n\n" + experience + "\n\n" + education + "\n\n" + about;
-                // port.postMessage({action: "showResponse", response: fulltext});
+                const fulltext = `Personal details:
+                ${topCard}
+
+                About:
+                ${about}
+                
+                Highlights:
+                ${highlights}
+                
+                Experience:
+                ${experience}
+                
+                Education:
+                ${education}
+                
+                ${languages.length > 0 && "Languages: \n" + languages}
+                
+                ${volunteering.length > 0 && "Volunteering experience: \n" + volunteering}
+                
+                ${projects.length > 0 && "Projects: \n" + projects}}`;
+                
+
 
                 makeApiCall(fulltext, message.additionalInfo).then(function(response) {
                     port.postMessage({action: "showResponse", response: response});
