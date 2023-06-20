@@ -21,7 +21,7 @@ function makeApiCall(html, additionalInfo) {
         'Authorization': 'Bearer ' + settings.OPENAI_API_KEY
         },
         body: JSON.stringify({
-        model: settings.model ? settings.model : 'gpt-4',
+        model: settings.OPENAI_MODEL ? settings.OPENAI_MODEL : 'gpt-4',
         messages: [
             { role: 'system', content: settings.systemMessage },
             { role: 'user', content: 'This is the content of the LinkedIn profile that I need to send a message to :' + html },
